@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "name": "03_express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "01app.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node 01app.js",
+    "dev":"node 01app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
