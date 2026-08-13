@@ -10,7 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start":"node 01app.js",
-    "dev":"node 01app.js"
+    "dev":"node 02_req_res.js"
   },
   "keywords": [],
   "author": "",
