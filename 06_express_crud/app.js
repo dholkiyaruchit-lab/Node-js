@@ -28,7 +28,32 @@ app.get("/taskList", (req, res, next) => {
   });
 });
 
+app.get("/task/:id", (req, res, next) => {
+  const id = Number(req.params.id);
 
+  const task = taskList.find((t) => t.id === id);
+
+  if (!task) {
+    return res
+      .status(404)
+      .json({ success: true, message: "no taskData found with this id" });
+  }
+
+  res.status(200).json({ success: true, message: "task found", task });
+});
+app.use((req, res, next) => {
+  return next(new HttpError("requested route not found", 404));
+});
+
+app.use((error, req, res, next) => {
+  if (res.headersSent) {
+    return next(error);
+  }
+
+  res.status(error.statusCode || 500).json({
+    message: error.message || "something went wrong please try again later",
+  });
+});
 const port = 5000;
 
 app.listen(port,(err)=>{
