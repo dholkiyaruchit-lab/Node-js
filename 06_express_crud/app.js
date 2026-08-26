@@ -41,6 +41,69 @@ app.get("/task/:id", (req, res, next) => {
 
   res.status(200).json({ success: true, message: "task found", task });
 });
+
+app.post("/addTask", (req, res, next) => {
+  const { task, description } = req.body;
+
+  if (!task || !description) {
+    return next(new HttpError("task or description data are required", 400));
+  }
+
+  const newTask = {
+    id: new Date().getTime(),
+    task,
+    description,
+  };
+
+  taskList.push(newTask);
+
+  res
+    .status(201)
+    .json({ success: true, message: "new Task added successfully", newTask });
+});
+
+app.put("/updateTask/:id", (req, res, next) => {
+  const id = Number(req.params.id);
+
+  const taskDataIndex = taskList.findIndex((t) => t.id === id);
+
+  if (taskDataIndex === -1) {
+    return next(new HttpError("task data with this id not found", 404));
+  }
+
+  const { task, description } = req.body;
+
+  if (!task || !description) {
+    return next(new HttpError("task or description data is required", 400));
+  }
+
+  taskList[taskDataIndex] = { ...taskList[taskDataIndex], task, description };
+
+  taskList[taskDataIndex] = { task, description };
+
+  res.status(200).json({
+    success: true,
+    message: "task data update successfully",
+    updateTask: taskList[taskDataIndex],
+  });
+});
+
+app.delete("/task/:id", (req, res, next) => {
+  const id = Number(req.params.id);
+
+  const index = taskList.findIndex((t) => t.id === id);
+
+  if (index === -1) {
+    return next(new HttpError("task not found with this id", 404));
+  }
+
+  taskList.splice(index, 1);
+
+  res
+    .status(200)
+    .json({ success: true, message: "task data deleted successfully" });
+});
+
 app.use((req, res, next) => {
   return next(new HttpError("requested route not found", 404));
 });
@@ -56,9 +119,9 @@ app.use((error, req, res, next) => {
 });
 const port = 5000;
 
-app.listen(port,(err)=>{
-if(err){
-  return console.log(err.message);
-}
-console.log(`server is running on port ${port}`);
+app.listen(port, (err) => {
+  if (err) {
+    return console.log(err.message);
+  }
+  console.log(`server is running on port ${port}`);
 });
