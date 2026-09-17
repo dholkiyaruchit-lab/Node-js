@@ -14,4 +14,7 @@ router.get("/:id", studentControllers.getStudentById);
 
 router.delete("/:id", studentControllers.deleteStudent);
 
+// router.patch("/:id",studentControllers.updateStudent)
+
+router.patch("/:id", studentControllers.updateDataManually);
 export default router;

@@ -60,6 +60,65 @@ const getStudentById = async (req, res, next) => {
     next(new HttpError(error.message, 500));
   }
 };
+// const updateStudent = async (req, res, next) => {
+//   try {
+//     const { id } = req.params;
+
+//     const updatedStudentData = await Student.findByIdAndUpdate(id, req.body, {
+//       new: true,
+//     });
+
+//     if (!updatedStudentData) {
+//       return next(new HttpError("student data not updated", 400));
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       message: "student data updated successfully",
+//       updatedStudentData,
+//     });
+//   } catch (error) {
+//     return next(new HttpError(error.message, 500));
+//   }
+// };
+const updateDataManually = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const studentUpdate = await Student.findById(id);
+
+    if (!studentUpdate) {
+      return next(new HttpError("student not found with this id", 404));
+    }
+
+    const updates = Object.keys(req.body);
+
+    console.log("updates", updates);
+
+    const allowedFields = ["name", "email", "mobileNumber"];
+
+    const isValidUpdate = updates.every((u) => allowedFields.includes(u));
+
+    console.log("is valid update", isValidUpdate);
+
+    if (!isValidUpdate) {
+      return next(new HttpError("only allowed field can be update", 400));
+    }
+
+    updates.forEach((update) => (studentUpdate[update] = req.body[update]));
+
+    await studentUpdate.save();
+
+    res.status(200).json({
+      success: true,
+      message: "student updated successfully",
+      studentUpdate,
+    });
+  } catch (error) {
+    return next(new HttpError(error.message, 500));
+  }
+};
+
 const deleteStudent = async (req, res, next) => {
   try {
     const { id } = req.params;
