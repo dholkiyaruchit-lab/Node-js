@@ -25,12 +25,25 @@ app.use((error,req,res,next)=>{
 
 const port = 5000;
 
-async function startServer(){
-    try{
-      const connect = await ConnectDB();
+async function startServer() {
+  try {
+    const connect = await connectDB();
 
-
-    }catch(err){
-      
+    if (!connect) {
+      throw new Error("failed to connect db");
     }
+
+    app.listen(port, (err) => {
+      if (err) {
+        return console.log(err.message);
+      }
+
+      console.log(`server running on port ${port}`);
+    });
+  } catch (error) {
+    console.log(error.message);
+    process.exit(1);
+  }
 }
+
+startServer();
