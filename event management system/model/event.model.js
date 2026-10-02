@@ -10,7 +10,10 @@ const eventSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  eventDescription: String,
+  eventDescription: 
+  { 
+    type: String,
+   },
   eventImages: {
     type: [String],
   },
@@ -25,7 +28,6 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
   eventSpeakers: {
     type: [String],
   },

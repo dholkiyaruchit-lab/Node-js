@@ -14,9 +14,11 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.json("hello from server");
 });
+
 app.use((req, res, next) => {
   return next(new HttpError("requested route not found", 404));
 });
+
 app.use((error, req, res, next) => {
   if (res.headersSent) {
     return next(error);
@@ -45,4 +47,5 @@ async function startServer() {
     process.exit(1);
   }
 }
+
 startServer();
