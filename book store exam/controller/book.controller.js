@@ -1,14 +1,16 @@
 import httpError from "../middleware/httpError.js";
 import bookModel from "../model/book.model.js";
+import fs from "fs"
 
 const add = async (req, res, next) => {
   try {
     const { title, author, ISBN, description, price } = req.body;
+  
+    const bookImage = req.files?.bookImage[0]?.path || null;
 
     if (!title || !author || !ISBN || !description || !price || !bookImage) {
       return next(new httpError(400, "all fields are required"));
     }
-    const bookImage = req.files?.bookImage[0]?.path || null;
 
     const book = await bookModel.create({
       title,
@@ -16,7 +18,7 @@ const add = async (req, res, next) => {
       ISBN,
       description,
       price,
-      bookImage,
+      bookImage: [bookImage],
     });
     res.status(201).json({
       success: true,

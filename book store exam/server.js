@@ -7,8 +7,8 @@ import bookRouter from "./routes/book.routes.js"
 dotenv.config({path:"./.env"})
 const app = express();
 
-app.use("/book",bookRouter);
 app.use(express.json());
+app.use("/book",bookRouter);
 
 app.get("/",(req,res)=>{
     res.json("hello from server")
