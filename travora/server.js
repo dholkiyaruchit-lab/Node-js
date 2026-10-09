@@ -2,11 +2,16 @@ import express from "express";
 import httpError from "./middleware/httpError.js";
 import connectDB from "./config/db.js";
 import dotenv from "dotenv";
+import packageRouter from "./routes/package.route.js"
+
 
 dotenv.config({path:"./.env"});
 
 const app = express();
 
+app.use(express.json());
+
+app.use("/travel",packageRouter);
 app.get("/", (req, res) => {
   res.json("hello from server");
 });
@@ -24,7 +29,7 @@ app.use((error, req, res, next) => {
     .status(error.statusCode || 500)
     .json({ message: error.message || "internal server error" });
 });
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5002;
 
 async function startServer(){
     try {

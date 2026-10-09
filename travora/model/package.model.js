@@ -12,14 +12,6 @@ const packageSchema = new mongoose.Schema(
       min: 0,
       required: true,
     },
-    startDate: {
-      type: Date,
-      required: true,
-    },
-    endDate: {
-      type: Date,
-      required: true,
-    },
     duration: {
       type: Number,
       required: true,
@@ -33,9 +25,6 @@ const packageSchema = new mongoose.Schema(
       type: String,
     },
     cloudinary_id: {
-      type: String,
-    },
-    packageType: {
       type: String,
     },
   },
