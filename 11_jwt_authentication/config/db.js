@@ -11,3 +11,4 @@ async function connectDB(){
         throw new Error(error.message)
     }
 }
+export default connectDB;
