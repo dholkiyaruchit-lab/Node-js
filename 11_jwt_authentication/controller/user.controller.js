@@ -47,6 +47,8 @@ const login = async (req, res, next) => {
       next(new HttpError("unable to login", 400));
     }
 
+    const token = await user.generateAuthToken();
+
     res.status(200).json({
       success: true,
       message: "user logged in successfully",
@@ -57,4 +59,4 @@ const login = async (req, res, next) => {
     return next(new HttpError(error.message, 500));
   }
 };
-export default { add,getAllUser,login };
+export default { add, getAllUser, login };
