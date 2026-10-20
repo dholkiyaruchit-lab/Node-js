@@ -2,30 +2,43 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 6,
-    validate: (value) => {
-      if (value.toLowerCase() === "password") {
-        return "password can't contain password word as password";
-      }
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 6,
+      validate: (value) => {
+        if (value.toLowerCase() === "password") {
+          return "password can't contain password word as password";
+        }
+      },
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
   },
-});
+  {
+    timestamps: true,
+  },
+);
 
 userSchema.pre("save", async function () {
   const user = this;
@@ -64,10 +77,10 @@ userSchema.method.generateAuthToken = async function () {
       process.env.JWT_SECRET,
       { expiresIn: "7d" },
     );
-    if(!token){
+    if (!token) {
       throw new Error("failed to generate auth token");
     }
-    user.tokens = user.tokens.concat({token});
+    user.tokens = user.tokens.concat({ token });
     await user.save();
     return token;
   } catch (error) {
