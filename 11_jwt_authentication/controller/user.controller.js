@@ -59,4 +59,29 @@ const login = async (req, res, next) => {
     return next(new HttpError(error.message, 500));
   }
 };
-export default { add, getAllUser, login };
+const authLogin = async (req, res, next) => {
+  try {
+    const user = req.user;
+
+    res
+      .status(200)
+      .json({ success: true, message: "auth login successfully", user });
+  } catch (error) {
+    return next(new HttpError(error.message, 500));    
+  }
+};
+const deleteUser = async (req, res, next) => {
+  try {
+    const user = req.user;
+
+    await User.deleteOne(user);
+
+    res
+      .status(200)
+      .json({ success: true, message: "user deleted successfully" });
+  } catch (error) {
+    return next(new HttpError(error.message, 500));
+  }
+};
+
+export default { add, getAllUser, login,authLogin,deleteUser };
