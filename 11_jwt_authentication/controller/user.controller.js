@@ -67,14 +67,14 @@ const authLogin = async (req, res, next) => {
       .status(200)
       .json({ success: true, message: "auth login successfully", user });
   } catch (error) {
-    return next(new HttpError(error.message, 500));    
+    return next(new HttpError(error.message, 500));
   }
 };
 const deleteUser = async (req, res, next) => {
   try {
     const user = req.user;
 
-    await User.deleteOne(user);
+    await userModel.deleteOne(user);
 
     res
       .status(200)
@@ -83,5 +83,67 @@ const deleteUser = async (req, res, next) => {
     return next(new HttpError(error.message, 500));
   }
 };
+const update = async (req, res, next) => {
+  try {
+    const user = req.user;
 
-export default { add, getAllUser, login,authLogin,deleteUser };
+    const updates = Object.keys(req.body);
+
+    const allowedField = ["name", "password"];
+
+    const isValidUpdates = updates.every((field) =>
+      allowedField.includes(field),
+    );
+
+    if (!isValidUpdates) {
+      return next(new HttpError("only allowed field can be update", 400));
+    }
+
+    updates.forEach((update) => {
+      user[update] = req.body[update];
+    });
+
+    await user.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "user data updated successfully", user });
+  } catch (error) {}
+};
+const logout = async (req, res, next) => {
+  try {
+    req.user.token = req.user.token.filter((t) => (t.token = !req.token));
+
+    await req.user.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "user log out successfully" });
+  } catch (error) {
+    return next(new HttpError(error.message, 500));
+  }
+};
+const logoutAll = async (req, res, next) => {
+  try {
+    req.user.token = [];
+
+    await req.user.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "user log out All successfully" });
+  } catch (error) {
+    return next(new HttpError(error.message, 500));
+  }
+};
+
+export default {
+  add,
+  getAllUser,
+  login,
+  authLogin,
+  deleteUser,
+  update,
+  logout,
+  logoutAll,
+};
