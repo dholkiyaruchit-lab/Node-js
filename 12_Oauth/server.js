@@ -7,9 +7,10 @@ dotenv.config({ path: "./.env" });
 
 const app = express();
 app.use(express.json());
+app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
-  res.json("Hello from server");
+  res.render("home");
 });
 
 app.use((req, res, next) => {
